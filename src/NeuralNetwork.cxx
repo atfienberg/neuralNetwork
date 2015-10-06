@@ -374,9 +374,7 @@ void NeuralNetwork::applySoftMax(){
   double log = std::log(logOperand);
   for(index i = 0; i < as_.back().size(); ++i){
     as_.back()[i] = exp(zs_.back()[i] - log - max);
-    //    std::cout << as_.back()[i] << std::endl;
   }
-  //  std::cin.ignore();
 }
 
   

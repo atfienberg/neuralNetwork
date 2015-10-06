@@ -34,8 +34,8 @@ public:
   std::vector<double> process(const std::vector<double>& inputValues);
   
   //basic getters and setters
-  void setEta(double m) { eta_ = m; }
-  double getEta() const { return mu_; }
+  void setEta(double e) { eta_ = e; }
+  double getEta() const { return eta_; }
 
   void setLambda(double l) { lambda_ = l; }
   double getLambda() const { return lambda_; }
