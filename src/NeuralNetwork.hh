@@ -16,10 +16,6 @@ public:
 
   //I'll need a constructor to read from a saved neural net somehow
 
-  //feed forward, 
-  //takes vector to input doubles and
-  //returns vector to output doubles filled with output values
-
   //to get this going I'll start with just this function: 
   //does one pass through, updates weights, biases, velocity 
   void learnOnline(const std::vector<double>& inputs, const std::vector<double>& desiredOutputs);
@@ -70,7 +66,7 @@ private:
   void initializeWeightsAndBiases(const std::vector<int>& sizes);
   //initialize as_, zs_, deltas_
   void initializeNeurons(const std::vector<int>& sizes);
-  
+ 
   void feedForward(const std::vector<double>& inputValues);
 
   double weightNormSquared();
