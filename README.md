@@ -1,0 +1,1 @@
+Implementation of a basic neural network in c++, mostly using information learned from http://neuralnetworksanddeeplearning.com .
