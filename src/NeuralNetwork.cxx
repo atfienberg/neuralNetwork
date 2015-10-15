@@ -37,11 +37,6 @@ NeuralNetwork::NeuralNetwork(std::vector<int> sizes, double eta):
   initializeNeurons(sizes);
 }
 
-void NeuralNetwork::inconsistentJsonError(){
-  std::cerr << "Error: json file inconsistent." << std::endl;
-  exit(EXIT_SUCCESS);
-}
-
 //read neural network in from json file
 NeuralNetwork::NeuralNetwork(const char* filename){
   //start by reading in file and parsing json into a map
@@ -57,6 +52,7 @@ NeuralNetwork::NeuralNetwork(const char* filename){
   auto netJson = json11::Json::parse(ss.str(), err);
   if(err.size() != 0){
     std::cerr << "Parsing error for " << filename << " : " << err << std::endl;
+    exit(EXIT_FAILURE);
   }
   auto netMap = netJson.object_items();
 
@@ -87,7 +83,7 @@ NeuralNetwork::NeuralNetwork(const char* filename){
     std::cerr << "Error: activation function " << 
       netMap.at("activation function").string_value() << 
       "not recognized" << std::endl;
-    exit(EXIT_SUCCESS);
+    exit(EXIT_FAILURE);
   }
 
   //weights and biases
@@ -433,6 +429,11 @@ double NeuralNetwork::cost(const std::vector<double>& desired, const std::vector
   std::cout << "Test data had no classification!" << std::endl;
   assert(false);
   return -1;
+}
+
+void NeuralNetwork::inconsistentJsonError(){
+  std::cerr << "Error: json file inconsistent." << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 double NeuralNetwork::sigmoid(double z){
