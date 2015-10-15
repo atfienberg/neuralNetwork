@@ -12,9 +12,10 @@
 class NeuralNetwork{
 public:
   //takes vector of ints, the number of neurons in each layer
-  NeuralNetwork(std::vector<int> sizes, double eta = 0.01, bool pInfo = false);
+  NeuralNetwork(std::vector<int> sizes, double eta = 0.01);
 
-  //I'll need a constructor to read from a saved neural net somehow
+  //Read in neural network from a file created with saveToFile (json format)
+  NeuralNetwork(const char* filename);
 
   //to get this going I'll start with just this function: 
   //does one pass through, updates weights, biases, velocity 
@@ -33,6 +34,9 @@ public:
   //process input values, get output values as return value
   std::vector<double> process(const std::vector<double>& inputValues);
   
+  //write neural net to a file (json format)
+  void saveToFile(const char* filename) const;
+
   //basic getters and setters
   void setEta(double e) { eta_ = e; }
   double getEta() const { return eta_; }
@@ -46,8 +50,6 @@ public:
   //change activation function
   void setSigmoid();
   void setRectifiedLinear();
-
-  void setPrintInfo(bool b) { printInfo_ = b; }
 
   void dump() const;
 
@@ -63,7 +65,7 @@ public:
 
 private:
   
-  void initializeWeightsAndBiases(const std::vector<int>& sizes);
+  void initializeWeightsAndBiases(const std::vector<int>& sizes, bool randomize = true);
   //initialize as_, zs_, deltas_
   void initializeNeurons(const std::vector<int>& sizes);
  
@@ -83,12 +85,13 @@ private:
   //updates weights and biases using current velocity matrix. 
   void updateWeightsAndBiases();
 
-
   //use the log likelihood
   static double cost(const std::vector<double>& desired, const std::vector<double>& found);
 
   //softmax applies softmax in place to final layer
   void applySoftMax();
+  
+  static void inconsistentJsonError();
 
   //sigmoid 
   static double sigmoid(double z);
@@ -112,7 +115,4 @@ private:
 
   activationFunction act_;
   activationFunctionPrime actPrime_;
-
-  bool printInfo_;
-
 };

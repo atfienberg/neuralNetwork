@@ -20,7 +20,7 @@ typedef vector<double> pulse;
 typedef vector<double> outcome;
 
 const double NOISE = 0.01;
-const double RNDMOFFSET = 0.05;
+const double RNDMOFFSET = .1;
 const double AMPPARAMETER = 1;//amplitude parameter
 
 const int NPTS = 20;
@@ -33,16 +33,17 @@ double addPulse(vector<pulse>& pulses, vector<outcome>& outcomes, TRandom3& rand
 
 int main(){  
   gStyle->SetOptStat(0);
-  //try to distinguish triangle, gaussian, and sipm-like function (with noise)
-  NeuralNetwork net(vector<int>({NPTS,3,2}));
-  net.setEta(0.001);
-  net.setMu(0.5);
-  net.setLambda(0.000001);
-  TRandom3 rand(0);
-  //build training set
+
   TFile* f = new TFile("../sipmTemplates/ledTemplateForDoublePulse.root");
   TSpline3* spline = (TSpline3*) f->Get("masterSpline");
   TFile* outf = new TFile("pileupSeparationOut.root", "recreate");
+  TRandom3 rand(0);
+
+  /*  NeuralNetwork net(vector<int>({NPTS,3,2}));
+  net.setEta(0.001);
+  net.setMu(0.5);
+  net.setLambda(0.000001);
+  //build training set
 
   vector<pulse> trainingPulses;
   vector<outcome> desiredTrainingOutcomes;
@@ -110,10 +111,16 @@ int main(){
   costGraph->SetMarkerStyle(20);
   costGraph->Write();
   c1->Print("costGraphPileup.pdf"); 
+  */
+  NeuralNetwork net("trainedPileupNet.json");
+
+  TCanvas* c1 = new TCanvas("c1", "c1");
 
   cout << "Test final training group, new" << endl;
-  testPulses.resize(0);
-  testOutcomes.resize(0);
+  /*  testPulses.resize(0);
+      testOutcomes.resize(0);*/
+  vector<pulse> testPulses;
+  vector<outcome> testOutcomes;
   vector<double> deltaTs;
   for(int i = 0; i < 1000000; ++i){
     deltaTs.push_back(addPulse(testPulses, testOutcomes, rand, spline, true));
@@ -164,6 +171,7 @@ int main(){
   //create time performance graph
   TGraph* performanceGraph = new TGraph(0);
   performanceGraph->SetName("performanceGraph");
+  performanceGraph->SetTitle("FF Neural Network Performance");
   for(unsigned int i = 0; i < successes.size(); ++i){
     performanceGraph->SetPoint(i, i*6.0/NPTSPERFORMANCEGRAPH, 
 			       static_cast<double>(successes[i])/totals[i]);
