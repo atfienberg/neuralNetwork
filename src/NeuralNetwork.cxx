@@ -82,7 +82,7 @@ NeuralNetwork::NeuralNetwork(const char* filename){
   else{
     std::cerr << "Error: activation function " << 
       netMap.at("activation function").string_value() << 
-      "not recognized" << std::endl;
+      " not recognized" << std::endl;
     exit(EXIT_FAILURE);
   }
 
@@ -314,12 +314,13 @@ void NeuralNetwork::initializeNeurons(const std::vector<int>& sizes){
 void NeuralNetwork::feedForward(const std::vector<double>& inputValues){
   //make sure number of inputs equals number of input nodes
   assert(inputValues.size() == as_[0].size());
+
   //as are activations
   for(index i = 0; i < inputValues.size(); ++i){
     as_[0][i] = inputValues[i];
   }
-  //zs are inputs to activations
-  
+
+  //zs are inputs to activations  
   for( index layer = 0; layer < weightMatrices_.size(); ++layer ){
     for( index i = 0; i < zs_[layer+1].size(); ++i){
       zs_[layer+1][i] = 0;
@@ -412,7 +413,7 @@ void NeuralNetwork::updateWeightsAndBiases(){
 
 //the log likelihood. Assumes desired is always 1 in 1 position and 0's everywhere else
 double NeuralNetwork::cost(const std::vector<double>& desired, const std::vector<double>& found){
-  assert(desired.size() == found.size());
+
   //desired same length as number of output neurons
   assert(desired.size() == found.size());
 
